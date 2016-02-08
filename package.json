@@ -1,7 +1,7 @@
 {
-  "name": "htmltojsx",
+  "name": "iobeam-htmltojsx",
   "version": "0.2.7-dev",
-  "description": "Converts HTML to JSX for use with React",
+  "description": "Converts HTML to JSX for use with React - iobeam fork",
   "main": "src/htmltojsx.js",
   "bin": "src/cli.js",
   "dependencies": {
