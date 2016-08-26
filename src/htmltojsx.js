@@ -236,10 +236,15 @@ HTMLtoJSX.prototype = {
     }
     //inserts any function listed under 'iobeamFn(yourFn;arg1,arg2,arg3)'
     //note: no spaces!
-    this.output = this.output.replace(/iobeamFn\((.*)\)/g, function(match, p1) {
-        var bracketedFn = '{' + p1 + '}'
+    this.output = this.output.replace(/iobeamFn\(((.|\n)*?)\)/g, function(match, p1) {
+        var bracketedFn = "{" + p1;
         //remove any tags within the arguments
-        return bracketedFn.replace(/<[^<>]*>/, '');
+        return bracketedFn
+            .replace(/\n/, "")
+            .replace(/<[^<>]*>/g, "")
+            .replace(/\;(.*)$/g, function(match, c1) {
+                return "(" + c1 + ")}";
+            });
     });
     return this.output;
   },
