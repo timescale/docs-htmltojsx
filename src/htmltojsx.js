@@ -230,22 +230,10 @@ HTMLtoJSX.prototype = {
       this.output += this.config.indent + '}\n';
       this.output += '});';
     } else if (this.config.exports) {
-      this.output += ';';
+        this.output += ';';
     } else {
       this.output = this._removeJSXClassIndention(this.output, this.config.indent);
     }
-    //inserts any function listed under 'iobeamFn(yourFn;arg1,arg2,arg3)'
-    //note: no spaces!
-    this.output = this.output.replace(/iobeamFn\(((.|\n)*?)\)/g, function(match, p1) {
-        var bracketedFn = "{" + p1;
-        //remove any tags within the arguments
-        return bracketedFn
-            .replace(/\n/, "")
-            .replace(/<[^<>]*>/g, "")
-            .replace(/\;(.*)$/g, function(match, c1) {
-                return "(" + c1 + ")}";
-            });
-    });
     return this.output;
   },
 
@@ -467,11 +455,12 @@ HTMLtoJSX.prototype = {
           return '{' + JSON.stringify(whitespace) + '}';
         });
     } else {
-      // Handle any curly braces.
+      // Handle any curly braces. Allow escaped curly braces.
       text = text
-        .replace(/(\{|\})/g, function(brace) {
+        .replace(/[^\\](\{|\})/g, function(brace) {
             return '{\'' + brace + '\'}';
-        });
+        })
+        .replace(/\\(\{|\})/g, "$1");
       // If there's a newline in the text, adjust the indent level
       if (text.indexOf('\n') > -1) {
         text = text.replace(/\n\s*/g, this._getIndentedNewline());

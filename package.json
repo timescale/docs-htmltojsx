@@ -1,7 +1,7 @@
 {
   "name": "iobeam-htmltojsx",
-  "version": "0.4.1",
-  "description": "Converts HTML to JSX for use with React - iobeam fork",
+  "version": "0.2.7",
+  "description": "Converts HTML to JSX for use with React",
   "main": "src/htmltojsx.js",
   "bin": "src/cli.js",
   "dependencies": {
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/reactjs/react-magic.git"
+    "url": "https://github.com/solugebefola/react-magic"
   },
   "keywords": [
     "react",
@@ -38,7 +38,7 @@
   "author": "Daniel Lo Nigro <daniel@dan.cx> (http://dan.cx/)",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/reactjs/react-magic/issues"
+    "url": "https://github.com/solugebefola/react-magic"
   },
-  "homepage": "https://github.com/reactjs/react-magic"
+  "homepage": "https://github.com/solugebefola/react-magic"
 }
