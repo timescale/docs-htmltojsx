@@ -170,11 +170,20 @@ function escapeSpecialChars(value) {
 var HTMLtoJSX = function(config) {
   this.config = config || {};
 
+  this.changeTagCase = function (string) {
+      return string;
+  }
+
   if (this.config.createClass === undefined) {
     this.config.createClass = true;
   }
   if (!this.config.indent) {
     this.config.indent = '  ';
+  }
+  if (this.config.lowercase) {
+      this.changeTagCase = function (string) {
+          return string.toLowerCase();
+      }
   }
 };
 HTMLtoJSX.prototype = {
@@ -402,17 +411,16 @@ HTMLtoJSX.prototype = {
    * @param {Node} node
    */
   _endVisitElement: function(node) {
-    var tagName = node.tagName.toLowerCase();
     // De-indent a bit
     // TODO: It's inefficient to do it this way :/
     this.output = trimEnd(this.output, this.config.indent);
     if (this._isSelfClosing(node)) {
       this.output += ' />';
     } else {
-      this.output += '</' + node.tagName.toLowerCase() + '>';
+      this.output += '</' + this.changeTagCase(node.tagName) + '>';
     }
 
-    if (tagName === 'pre') {
+    if (node.tagName.toLowerCase() === 'pre') {
       this._inPreTag = false;
     }
   },
@@ -451,7 +459,7 @@ HTMLtoJSX.prototype = {
       // wrapping newlines and sequences of two or more spaces in variables.
       text = text
         .replace(/\r/g, '')
-        .replace(/( {2,}|\n|\t|\{|\})/g, function(whitespace) {
+        .replace(/( {2,}|\n|\t|[^\\]\{|[^\\]\})/g, function(whitespace) {
           return '{' + JSON.stringify(whitespace) + '}';
         });
     } else {
@@ -501,9 +509,15 @@ HTMLtoJSX.prototype = {
         // Numeric values should be output as {123} not "123"
         if (isNumeric(attribute.value)) {
           result += '={' + attribute.value + '}';
-        } else if (attribute.value.length > 0) {
+      } else if (attribute.value.length > 0 && this.config.attributes) {
+            result += '={`' +
+              attribute.value
+                  .replace(/\\(\{|\})/g, "$1")
+                  .replace(/\{/g, "$${")
+            + '`}';
+      }  else if (attribute.value.length > 0) {
           result += '="' + attribute.value.replace(/"/gm, '&quot;') + '"';
-        }
+      }
         return result;
     }
   },

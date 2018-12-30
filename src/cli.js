@@ -17,6 +17,10 @@ function getArgs() {
     .describe('e', 'Decide whether to wrap in module.exports')
     .boolean('g')
     .describe('g', 'Decide whether to format for grouping with other jsx files(i.e. no wrapper)')
+    .boolean('k')
+    .describe('k', 'Decide whether to keep case for all tags or switch to lowercase')
+    .boolean('attr')
+    .describe('attr', 'Handle braces vars in attributes')
     .help('help')
     .example(
       '$0 -c AwesomeComponent awesome.htm',
@@ -44,7 +48,9 @@ function main() {
       createClass: !!argv.className,
       outputClassName: argv.className,
       exports: argv.e && !argv.g,
-      group: argv.g && !argv.e
+      group: argv.g && !argv.e,
+      lowercase: !argv.k,
+      attributes: argv.attr
     });
     var output = converter.convert(input);
     console.log(output);
