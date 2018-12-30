@@ -396,7 +396,7 @@ HTMLtoJSX.prototype = {
       this._inPreTag = true;
     }
 
-    this.output += '<' + tagName;
+    this.output += '<' + this.changeTagCase(node.tagName);
     if (attributes.length > 0) {
       this.output += ' ' + attributes.join(' ');
     }
@@ -459,22 +459,21 @@ HTMLtoJSX.prototype = {
       // wrapping newlines and sequences of two or more spaces in variables.
       text = text
         .replace(/\r/g, '')
-        .replace(/( {2,}|\n|\t|[^\\]\{|[^\\]\})/g, function(whitespace) {
+        .replace(/( {2,}|\n|\t|[^:][^:]\{|[^:][^:]\})/g, function(whitespace) {
           return '{' + JSON.stringify(whitespace) + '}';
         });
     } else {
       // Handle any curly braces. Allow escaped curly braces.
       text = text
-        .replace(/[^\\](\{|\})/g, function(brace) {
+        .replace(/[^:][^:](\{|\})/g, function(brace) {
             return '{\'' + brace + '\'}';
-        })
-        .replace(/\\(\{|\})/g, "$1");
+        });
       // If there's a newline in the text, adjust the indent level
       if (text.indexOf('\n') > -1) {
         text = text.replace(/\n\s*/g, this._getIndentedNewline());
       }
     }
-    this.output += text;
+    this.output += text.replace(/::(\{|\})/g, "$1");
   },
 
   /**
@@ -512,7 +511,7 @@ HTMLtoJSX.prototype = {
       } else if (attribute.value.length > 0 && this.config.attributes) {
             result += '={`' +
               attribute.value
-                  .replace(/\\(\{|\})/g, "$1")
+                  .replace(/::(\{|\})/g, "$1")
                   .replace(/\{/g, "$${")
             + '`}';
       }  else if (attribute.value.length > 0) {
