@@ -459,8 +459,8 @@ HTMLtoJSX.prototype = {
       // wrapping newlines and sequences of two or more spaces in variables.
       text = text
         .replace(/\r/g, '')
-        .replace(/[^:]?[^:]?(\{|\})/g, function(brace) {
-            return '{\'' + brace + '\'}';
+        .replace(/(?<!:{2,})(\{|\})/g, function(brace) {
+            return '{\'' + '\\' + brace + '\'}';
         })
         .replace(/( {2,}|\n|\t)/g, function(whitespace) {
           return '{' + JSON.stringify(whitespace) + '}';
@@ -468,8 +468,8 @@ HTMLtoJSX.prototype = {
     } else {
       // Handle any curly braces. Allow escaped curly braces.
       text = text
-        .replace(/[^:]?[^:]?(\{|\})/g, function(brace) {
-            return '{\'' + brace + '\'}';
+        .replace(/(?<!:{2,})(\{|\})/g, function(brace) {
+            return '{\'' + '\\' + brace + '\'}';
         });
       // If there's a newline in the text, adjust the indent level
       if (text.indexOf('\n') > -1) {
