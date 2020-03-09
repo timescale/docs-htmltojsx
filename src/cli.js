@@ -16,9 +16,13 @@ function getArgs() {
     .boolean('e')
     .describe('e', 'Decide whether to wrap in module.exports')
     .boolean('g')
-    .describe('g', 'Decide whether to format for grouping with other jsx files(i.e. no wrapper)')
+    .describe('g', 'Decide whether to format for grouping with other jsx files(i.e. no wrapper')
+    .boolean('r')
+    .describe('r', 'Decide whether to convert kebob to pascal case for React components')
     .boolean('k')
     .describe('k', 'Decide whether to keep case for all tags or switch to lowercase')
+    .string('f')
+    .describe('f', 'What to prefix each html node with (used with kebob to pascal case flag only)')
     .boolean('attr')
     .describe('attr', 'Handle braces vars in attributes')
     .help('help')
@@ -50,7 +54,9 @@ function main() {
       exports: argv.e && !argv.g,
       group: argv.g && !argv.e,
       lowercase: !argv.k,
-      attributes: argv.attr
+      attributes: argv.attr,
+      kebebToPascal: argv.r,
+      prefix: argv.f,
     });
     var output = converter.convert(input);
     console.log(output);
