@@ -185,6 +185,17 @@ var HTMLtoJSX = function(config) {
           return string.toLowerCase();
       }
   }
+  if (this.config.kebebToPascal) {
+    this.changeTagCase = function (string) {
+      var _string = string.toLowerCase();
+      if (_string.indexOf('-') === -1) {
+        return _string;
+      }
+      return (this.config.prefix.trim() || '') + _string.replace(/(^\w|-\w)/g, function (text) {
+        return text.replace(/-/, "").toUpperCase();
+      })
+    }
+  }
 };
 HTMLtoJSX.prototype = {
   /**
